@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
+import React, { type ReactNode } from 'react';
+import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { Calendar, Camera, Heart, Star, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
