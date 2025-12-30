@@ -1,7 +1,7 @@
 import React, { useState, useEffect, type FormEvent } from 'react';
 import Lottie from 'lottie-react';
 // @ts-ignore
-import welcomeAnimation from '../assets/welcome.json';
+import welcomeAnimation from "../assets/welcome.json";
 import { Heart, Timer, Lock, Lightbulb, Volume2, ArrowRight, AlertCircle, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
