@@ -1,18 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import Lottie from 'lottie-react';
 import welcomeAnimation from '../assets/welcome.json';
-import { Heart, Timer, Lock, Unlock, Lightbulb, Volume2, ArrowRight, AlertCircle, Info } from 'lucide-react';
+import { Heart, Timer, Lock, Lightbulb, Volume2, ArrowRight, AlertCircle, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-// Accept onUnlock as a prop from App.jsx
-const Home = ({ onUnlock }) => {
-  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
-  const [inputCode, setInputCode] = useState("");
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [error, setError] = useState(false);
+// 1. Define the Interface for Props
+interface HomeProps {
+  onUnlock?: () => void; // Optional function that returns nothing
+}
 
-  // 1. CHANGE YOUR PASSCODE HERE
+// 2. Define the Interface for the Timer state
+interface TimeLeft {
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+
+const Home: React.FC<HomeProps> = ({ onUnlock }) => {
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({ hours: 0, minutes: 0, seconds: 0 });
+  const [inputCode, setInputCode] = useState<string>("");
+  const [isUnlocked, setIsUnlocked] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+
   const CORRECT_CODE = "VSR"; 
 
   useEffect(() => {
@@ -20,8 +30,9 @@ const Home = ({ onUnlock }) => {
     const interval = setInterval(() => {
       const now = new Date().getTime();
       const distance = target - now;
-      if (distance < 0) clearInterval(interval);
-      else {
+      if (distance < 0) {
+        clearInterval(interval);
+      } else {
         setTimeLeft({
           hours: Math.floor((distance / (1000 * 60 * 60))),
           minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
@@ -32,12 +43,12 @@ const Home = ({ onUnlock }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleUnlock = (e) => {
+  // 3. Type the Form Event
+  const handleUnlock = (e: FormEvent) => {
     e.preventDefault();
     if (inputCode.toLowerCase() === CORRECT_CODE.toLowerCase()) {
       setIsUnlocked(true);
       setError(false);
-      // Trigger the global music play from App.jsx
       if (onUnlock) onUnlock(); 
     } else {
       setError(true);
@@ -76,14 +87,17 @@ const Home = ({ onUnlock }) => {
             <Timer size={18} /> <span>Countdown to 2026</span>
           </div>
           <div className="flex gap-4">
-            {[ { label: 'HRS', value: timeLeft.hours }, { label: 'MIN', value: timeLeft.minutes }, { label: 'SEC', value: timeLeft.seconds } ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center">
-                <div className="bg-white/80 backdrop-blur-sm border-2 border-[#FFB800] rounded-2xl w-16 h-16 flex items-center justify-center shadow-xl">
-                  <span className="text-2xl font-black text-[#D97706]">{item.value.toString().padStart(2, '0')}</span>
+            {(['HRS', 'MIN', 'SEC'] as const).map((label, i) => {
+               const values = [timeLeft.hours, timeLeft.minutes, timeLeft.seconds];
+               return (
+                <div key={i} className="flex flex-col items-center">
+                  <div className="bg-white/80 backdrop-blur-sm border-2 border-[#FFB800] rounded-2xl w-16 h-16 flex items-center justify-center shadow-xl">
+                    <span className="text-2xl font-black text-[#D97706]">{values[i].toString().padStart(2, '0')}</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-amber-800 mt-2 tracking-widest">{label}</span>
                 </div>
-                <span className="text-[10px] font-bold text-amber-800 mt-2 tracking-widest">{item.label}</span>
-              </div>
-            ))}
+               )
+            })}
           </div>
         </div>
 
@@ -106,7 +120,13 @@ const Home = ({ onUnlock }) => {
               </motion.div>
 
               <div className="flex flex-col gap-3">
-                <input type="text" value={inputCode} onChange={(e) => setInputCode(e.target.value)} placeholder="Secret code..." className={`bg-white border-2 ${error ? 'border-red-500 animate-bounce' : 'border-[#FFB800]'} rounded-full py-3 px-6 text-center text-[#D97706] font-bold outline-none focus:ring-2 ring-amber-300 transition-all shadow-md`} />
+                <input 
+                  type="text" 
+                  value={inputCode} 
+                  onChange={(e) => setInputCode(e.target.value)} 
+                  placeholder="Secret code..." 
+                  className={`bg-white border-2 ${error ? 'border-red-500 animate-bounce' : 'border-[#FFB800]'} rounded-full py-3 px-6 text-center text-[#D97706] font-bold outline-none focus:ring-2 ring-amber-300 transition-all shadow-md`} 
+                />
                 <button type="submit" className="bg-[#D97706] text-white font-black py-3 px-8 rounded-full hover:bg-[#B45309] transition-all flex items-center justify-center gap-2 shadow-lg uppercase tracking-widest">Unlock Gift</button>
                 {error && <p className="text-red-500 text-xs font-bold italic mt-1">Try again, love! ❤️</p>}
               </div>
@@ -118,7 +138,6 @@ const Home = ({ onUnlock }) => {
                 <p className="text-green-600 font-bold italic text-sm">Playing Prema Velluva...</p>
               </div>
 
-              {/* DISCLAIMER ADDED HERE */}
               <motion.div 
                 initial={{ opacity: 0 }} 
                 animate={{ opacity: 1 }} 

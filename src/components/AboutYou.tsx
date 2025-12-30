@@ -4,7 +4,19 @@ import { ArrowLeft, Heart, Sparkles, Gift, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 
-const BackgroundSymbols = () => {
+// 1. Define types for the FlipCard Props
+interface FlipCardProps {
+  title: string;
+  message: string;
+}
+
+// 2. Define the shape of your Qualities objects
+interface Quality {
+  title: string;
+  message: string;
+}
+
+const BackgroundSymbols: React.FC = () => {
   const symbols = Array.from({ length: 30 });
   return (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#FFFDF5]">
@@ -23,8 +35,8 @@ const BackgroundSymbols = () => {
   );
 };
 
-const FlipCard = ({ title, message }) => {
-  const [isFlipped, setIsFlipped] = useState(false);
+const FlipCard: React.FC<FlipCardProps> = ({ title, message }) => {
+  const [isFlipped, setIsFlipped] = useState<boolean>(false); // Type the state
   return (
     <div className="w-full h-64 cursor-pointer [perspective:1000px]" onClick={() => setIsFlipped(!isFlipped)}>
       <motion.div
@@ -45,10 +57,10 @@ const FlipCard = ({ title, message }) => {
   );
 };
 
-const AboutYou = () => {
-  const [showSurprise, setShowSurprise] = useState(false);
+const AboutYou: React.FC = () => {
+  const [showSurprise, setShowSurprise] = useState<boolean>(false);
 
-  const qualities = [
+  const qualities: Quality[] = [
     { title: "Love", message: "Your love is the anchor that keeps me grounded." },
     { title: "Care", message: "Every little thing you do shows me how much I matter." },
     { title: "Affection", message: "Your touch and kind words make my world brighter." },
@@ -57,7 +69,7 @@ const AboutYou = () => {
     { title: "Support", message: "I am so grateful to have you by my side through it all." },
   ];
 
-  const triggerSurprise = () => {
+  const triggerSurprise = (): void => {
     setShowSurprise(true);
     const end = Date.now() + (5 * 1000);
     const colors = ['#FFCC00', '#D97706', '#FFFFFF'];
@@ -73,7 +85,6 @@ const AboutYou = () => {
     <div className="relative min-h-screen py-12 px-6 overflow-hidden">
       <BackgroundSymbols />
 
-      {/* --- SURPRISE MESSAGE OVERLAY --- */}
       <AnimatePresence>
         {showSurprise && (
           <motion.div 

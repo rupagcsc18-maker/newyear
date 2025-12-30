@@ -1,19 +1,17 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import LetterPage from './components/LetterPage';
 import AboutYou from './components/AboutYou';
 import Timeline from './components/Timeline';
 
-// Import the specific audio file you uploaded
+// Note: If TypeScript shows an error here, see the declaration fix below
 import song from './assets/Prema-Velluva.mp3'; 
 
-function App() {
-  // 1. Define the ref inside the component function
-  const audioRef = useRef(null);
+const App: React.FC = () => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // 2. Define the play function
-  const playMusic = () => {
+  const playMusic = (): void => {
     if (audioRef.current) {
       audioRef.current.play().catch(err => {
         console.log("Playback error (usually requires user interaction first):", err);
@@ -23,16 +21,16 @@ function App() {
 
   return (
     <Router>
-      {/* 3. The audio element with the ref attached */}
-      <audio 
-        ref={audioRef} 
-        src={song} 
-        loop 
+      {/* Hidden audio element */}
+      <audio
+        ref={audioRef}
+        src={song}
+        loop
         preload="auto"
       />
-      
+
       <Routes>
-        {/* Pass the playMusic function as a prop to Home */}
+        {/* Pass playMusic to Home so it triggers when the code is correct */}
         <Route path="/" element={<Home onUnlock={playMusic} />} />
         <Route path="/letter" element={<LetterPage />} />
         <Route path="/timeline" element={<Timeline />} />

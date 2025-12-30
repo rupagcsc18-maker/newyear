@@ -1,14 +1,29 @@
-import React from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { ReactNode } from 'react';
+import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { Calendar, Camera, Heart, Star, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// 1. Import your local images from the assets folder
+// 1. Import your local images
 import tirumalaImg from '../assets/tirumala.png';
 import arunachalamImg from '../assets/arunachalam.png';
 import fightsImg from '../assets/fights.png';
 
-const milestones = [
+// 2. Define the Milestone Interface
+interface Milestone {
+  date: string;
+  title: string;
+  desc: string;
+  icon: ReactNode; // Since it holds a Lucide component
+  image: string;
+}
+
+// 3. Define Props for TimelineItem
+interface TimelineItemProps {
+  milestone: Milestone;
+  index: number;
+}
+
+const milestones: Milestone[] = [
   {
     date: "August 2025",
     title: "Endless Talks & Games",
@@ -46,7 +61,7 @@ const milestones = [
   }
 ];
 
-const TimelineItem = ({ milestone, index }) => {
+const TimelineItem: React.FC<TimelineItemProps> = ({ milestone, index }) => {
   const isEven = index % 2 === 0;
 
   return (
@@ -83,10 +98,11 @@ const TimelineItem = ({ milestone, index }) => {
   );
 };
 
-const Timeline = () => {
+const Timeline: React.FC = () => {
   const { scrollYProgress } = useScroll();
   
-  const bgColor = useTransform(
+  // Typing the transform result
+  const bgColor: MotionValue<string> = useTransform(
     scrollYProgress,
     [0, 1],
     ["#FFFDF5", "#FFBF00"] 

@@ -5,8 +5,14 @@ import { Link } from 'react-router-dom';
 // Ensure the path to your image is correct (src/assets/letter.png)
 import letterImg from '../assets/image1.png';
 
+// 1. Define Props for the Heart Overlay
+interface ImageOverlayHeartProps {
+  delay: number;
+  style: React.CSSProperties; // Use React's built-in CSS type
+}
+
 // 1. Background Floating Symbols (High Brightness & Glow)
-const BackgroundSymbols = () => {
+const BackgroundSymbols: React.FC = () => {
   const symbols = Array.from({ length: 25 });
   return (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
@@ -44,7 +50,8 @@ const BackgroundSymbols = () => {
 };
 
 // 2. Hearts Floating specifically over the PNG image
-const ImageOverlayHeart = ({ delay, style }) => (
+// Typed the props here
+const ImageOverlayHeart: React.FC<ImageOverlayHeartProps> = ({ delay, style }) => (
   <motion.div
     initial={{ y: 0, opacity: 0 }}
     animate={{ 
@@ -66,7 +73,7 @@ const ImageOverlayHeart = ({ delay, style }) => (
   </motion.div>
 );
 
-const LetterPage = () => {
+const LetterPage: React.FC = () => {
   const overlayHearts = Array.from({ length: 15 });
 
   return (
@@ -130,7 +137,9 @@ const LetterPage = () => {
                   src={letterImg} 
                   alt="Our Letter" 
                   className="w-full h-auto rounded-xl shadow-lg border-2 border-amber-100 relative z-0"
-                  onError={(e) => { e.target.src = "https://via.placeholder.com/600x400?text=Letter+Image+Not+Found"; }}
+                  onError={(e) => { 
+                    (e.target as HTMLImageElement).src = "https://via.placeholder.com/600x400?text=Letter+Image+Not+Found"; 
+                  }}
                 />
             </div>
           </div>
